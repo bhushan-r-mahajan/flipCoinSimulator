@@ -6,39 +6,55 @@ headsWin=0
 tailsWin=0
 totalWins=21
 
-while [[ $choice -eq 'n' ]]
+function flippingCoin(){
+
+flipCoin=$((RANDOM%2))
+if [ $flipCoin -eq $heads ]
+then
+	((headsWin++))
+elif [ $flipCoin -eq $tails ]
+then
+	((tailsWin++))
+fi
+
+}
+
+function whoWins(){
+
+if [[ $totalWins -eq $headsWin ]]
+then
+	echo "Heads has Won total 21 times And is the winner!!"
+	winDiff=$(($headsWin-$tailsWin))
+	echo "Heads Won by "$winDiff
+elif [[ $totalWins -eq $tailsWin ]]
+then
+	echo "Tails has Won total 21 times And is the winner!!"
+	winDiff=$(($tailsWin-$headsWin))
+	echo "Tails Won by "$winDiff
+fi
+
+}
+
+while [[ $headsWin -ne $totalWins && $tailsWin -ne $totalWins ]]
 do
-	flipCoin=$((RANDOM%2))
-
-	read -p "Flip Coin ??(y/n)=" choice;
-	case $choice in
-		y)
-			if [ $flipCoin -eq $heads ]
-			then
-				echo "Heads is the Winner!"
-				((headsWin++))
-				echo "Heads has won "$headsWin" times!"
-			elif [ $flipCoin -eq $tails ]
-			then
-				echo "Tails is the Winner!"
-				((tailsWin++))
-				echo "Tails has won $tailsWin times!"
-			fi;;
-		n)
-			exit;;
-	esac
-
-	if [[ $totalWins -eq $headsWin ]]
-	then
-		echo "Heads has Won total 21 times And is the winner!!"
-		break
-	elif [[ $totalWins -eq $tailsWin ]]
-	then
-		echo "Tails has Won total 21 times And is the winner!!"
-      break
-	elif [[ $totalWins -eq $headsWin && $totalWins -eq $tailsWin ]]
+	flippingCoin
+	whoWins
+	if [[ $totalWins -eq $headsWin && $totalWins -eq $tailsWin ]]
 	then
 		echo "The game is a Tie!"
-		break
+		flippingCoin
+		diff=$(($headsWin-$tailsWin))
+		if [[ $diff -eq '2' || $diff -eq '-2' ]]
+		then
+			if [ $headsWin -gt $tailsWin ]
+			then
+				echo "Heads Wins"
+				break
+			elif [ $headsWin -lt $tailsWin ]
+         then
+            echo "Tails Wins"
+            break
+			fi
+		fi
 	fi
 done
